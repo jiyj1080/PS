@@ -52,14 +52,14 @@ public class Solution {
              
             sb.append("#").append(tc).append(" ");
              
-            sb.append(check(1));
+            sb.append((int)check(1));
              
             System.out.println(sb);
             sb.setLength(0);
         }
     }
      
-    static int check(int idx) {
+    static double check(int idx) {
         Node node = tree[idx];
         switch (node.data) {
         case "+":
@@ -71,7 +71,7 @@ public class Solution {
         case "/":
         	return check(node.left) / check(node.right);
         default:
-        	return Integer.parseInt(node.data);
+        	return Double.parseDouble(node.data);
         }
     }
  
