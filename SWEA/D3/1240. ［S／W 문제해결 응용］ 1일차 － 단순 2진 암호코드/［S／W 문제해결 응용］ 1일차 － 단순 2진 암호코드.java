@@ -25,9 +25,11 @@ public class Solution {
 			for (int i = 0; i < n; i++) {
 				String s = br.readLine();
 				
-				if (!s.contains("1") || check) continue;
+				if (check) continue;
 				
 				int idx = s.lastIndexOf('1') - 55;
+				
+				if (idx < 0) continue;
 				
 				for (int j=0;j<8;j++, idx += 7) {
 					String part = s.substring(idx, idx + 7);
@@ -67,6 +69,7 @@ public class Solution {
 						break;
 					};
 				}
+				check = true;
 			}
 			
 			int a = num[0] + num[2] + num[4] + num[6];
