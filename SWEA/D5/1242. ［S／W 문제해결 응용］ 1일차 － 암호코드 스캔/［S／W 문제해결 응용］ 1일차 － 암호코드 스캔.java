@@ -4,7 +4,9 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
@@ -27,8 +29,8 @@ public class Solution {
 			int n = Integer.parseInt(st.nextToken());
 			int m = Integer.parseInt(st.nextToken());
 
-			List<String> checkedLine = new ArrayList<>();
-			List<List<Integer>> checkedCode = new ArrayList<>();
+			Set<String> checkedLine = new HashSet<>();
+			Set<List<Integer>> checkedCode = new HashSet<>();
 			int result = 0;
 			for (int i = 0; i < n; i++) {
 				int[] code = new int[8];
