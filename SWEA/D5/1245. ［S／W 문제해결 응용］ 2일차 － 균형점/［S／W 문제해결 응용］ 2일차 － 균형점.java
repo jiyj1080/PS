@@ -11,7 +11,6 @@ import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 public class Solution {
-	static final double e = (double) 1e-12;
 	static int n;
 	static int[] pos;
 	static int[] mass;
@@ -43,27 +42,22 @@ public class Solution {
 			for (int i = 0; i < n - 1; i++) {
 				double left = (double) pos[i];
 				double right = (double) pos[i + 1];
-				double x, diff;
+				double x = 0, diff;
 
 				// L - R < 1e-12, x = ans
-				while(true) {
+				for (int iter = 0; iter < 200; iter++) {
 					// x = L + R / 2
-					x = (left + right) / 2.0f;
+					x = (left + right) / 2.0;
 					diff = diffLR(x);
 					// L < R R = x,
 					if (diff < 0) {
 						right = x;
 					}
 					// L > R L = x
-					else if (diff > 0) {
+					else {
 						left = x;
 					}
-					double xTmp = (left + right) / 2.0f;
-					if (xTmp == x) break;
-					else x = xTmp;
-					
-				};
-
+				}
 				answer[i] = x;
 			}
 
@@ -82,7 +76,7 @@ public class Solution {
 		for (int i = 0; i < n; i++) {
 			double p = (double) pos[i];
 			double f = mass[i] / ((p - x) * (p - x));
-			
+
 			if (p < x) {
 				leftSum += f;
 			} else {
