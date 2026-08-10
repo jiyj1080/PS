@@ -2,19 +2,9 @@ import java.util.*;
 
 
 class Solution {
-    static int[] gap;
-    
     public int solution(int distance, int[] rocks, int n) {
         int size = rocks.length;
         Arrays.sort(rocks);
-        gap = new int [size + 1];
-        
-        int start = 0;
-        for (int i = 0; i < size; i++) {
-            gap[i] = rocks[i] - start;
-            start = rocks[i];
-        }
-        gap[size] = distance - rocks[size - 1];
         
         int left = 1;
         int right = distance;
@@ -42,19 +32,7 @@ class Solution {
                 left = mid + 1;
             }
         }
-        return answer;
+        return right;
         
     }
-    
-// 0 2 11 14 17 21 25
-//  2 9  3  3  4  4
-//   11 12 6  7  8
-
-// 0 11 14 17 21 25
-//  11  3  3  4  4
-//   14 6  7  8
-
-// 0 2 4 6 8 10 12 14 16
-//  2 2 2 2 2  2  2  2
-//   4   4   4     4
 }
