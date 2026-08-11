@@ -4,7 +4,8 @@ import java.util.*;
 public class Solution {
 	static int totalChange, result, numLen;
 	static int[] numpad;
-	static List<HashSet<Integer>> visited;
+//	static List<HashSet<Integer>> visited;
+	static boolean[][] visited;
 
 	public static void main(String[] args) throws Exception {
 		//System.setIn(new FileInputStream("input.txt"));
@@ -17,15 +18,16 @@ public class Solution {
 
 		for (int tc = 1; tc <= T; tc++) {
 			st = new StringTokenizer(br.readLine());
-			String num = new String(st.nextToken());
+			String num = st.nextToken();
 			numLen = num.length();
 			result = 0;
 			totalChange = Integer.parseInt(st.nextToken());
 
-			visited = new ArrayList<>();
-			for (int i = 0; i < totalChange; i++) {
-				visited.add(new HashSet<>());
-			}
+//			visited = new ArrayList<>();
+//			for (int i = 0; i < totalChange; i++) {
+//				visited.add(new HashSet<>());
+//			}
+			visited = new boolean[11][1000000];
 			numpad = new int[numLen];
 			for (int i = 0; i < numLen; i++) {
 				numpad[i] = num.charAt(i) - '0';
@@ -50,8 +52,14 @@ public class Solution {
 			for (int j = i + 1; j < numLen; j++) {
 				swap(numpad, i, j);
 				
-				if (!visited.get(change).contains(numpadToInt(numpad))) {
-					visited.get(change).add(numpadToInt(numpad));
+				int nextNum = numpadToInt(numpad);
+				
+//				if (!visited.get(change).contains(nextNum)) {
+//					visited.get(change).add(nextNum);
+//					dfs(change + 1, numpad);
+//				}
+				if (!visited[change][nextNum]) {
+					visited[change][nextNum] = true;
 					dfs(change + 1, numpad);
 				}
 				
