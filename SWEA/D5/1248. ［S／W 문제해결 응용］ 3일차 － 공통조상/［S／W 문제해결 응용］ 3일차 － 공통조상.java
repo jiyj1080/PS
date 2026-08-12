@@ -39,19 +39,19 @@ public class Solution {
 				tree[child].parent = parent;
 			}
 			
-			HashSet<Integer> aRoot = new HashSet<>();
+			boolean[] visited = new boolean[v + 1];
 			
 			// a의 부모들 모두 집합에 넣기
 			int current = a;
-			aRoot.add(current);				
+			visited[current] = true;				
 			while (current != 1) {
 				current = tree[current].parent;
-				aRoot.add(current);				
+				visited[current] = true;	
 			}
 			
 			// b의 부모 확인하면서 aRoot 집합에 존재하면 공통조상으로 판명
 			commonParent = b;
-			while (!aRoot.contains(commonParent)) {
+			while (!visited[commonParent]) {
 				commonParent = tree[commonParent].parent;
 			}
 			
