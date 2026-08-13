@@ -1,0 +1,55 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+	static int n, result;
+	static int[] trees;
+
+	public static void main(String[] args) throws Exception {
+		//System.setIn(new FileInputStream("input.txt"));
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		int T = Integer.parseInt(br.readLine());
+
+		for (int tc = 1; tc <= T; tc++) {
+			int max = 0;
+			result = 0;
+			n = Integer.parseInt(br.readLine());
+			trees = new int[n];
+			st = new StringTokenizer(br.readLine());
+			for (int i = 0; i < n; i++) {
+				int tmp = Integer.parseInt(st.nextToken());
+				trees[i] = tmp;
+				max = Math.max(max, tmp);
+			}
+			
+			int even = 0, odd = 0;
+			for (int i = 0; i < n; i++) {
+				int gap = max - trees[i];
+				even += gap / 2;
+				odd += gap % 2;
+			}
+			
+			while (even > odd + 1) {
+				even--;
+				odd += 2;
+			}
+			
+			if (even == odd)
+				result = even * 2;
+			else if (even > odd) {
+				result = (odd + 1) * 2;
+			} else {
+				int leftOver = odd - even;
+				result = even * 2 + leftOver * 2 - 1;
+			}
+
+			sb.append("#").append(tc).append(" ").append(result);
+			System.out.println(sb);
+			sb.setLength(0);
+		}
+	}
+}
