@@ -1,0 +1,81 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+	static int n, m;
+	static boolean[][] edge;
+	static boolean[] visited;
+
+	public static void main(String[] args) throws Exception {
+		//System.setIn(new FileInputStream("input.txt"));
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		int T = Integer.parseInt(br.readLine());
+
+		for (int tc = 1; tc <= T; tc++) {
+			int result = 0;
+			n = Integer.parseInt(br.readLine());
+			edge = new boolean[n + 1][n + 1];
+			m = Integer.parseInt(br.readLine());
+			for (int i = 0; i < m; i++) {
+				st = new StringTokenizer(br.readLine());
+				int from = Integer.parseInt(st.nextToken());
+				int to = Integer.parseInt(st.nextToken());
+				edge[from][to] = true;
+			}
+
+			for (int i = 1; i <= n; i++) {
+				visited = new boolean[n + 1];
+				subTree(i);
+				int a = 0;
+				for (int j = 1; j <= n; j++) {
+					if (visited[j])
+						a++;
+				}
+
+				visited = new boolean[n + 1];
+				subTreeReverse(i);
+				int b = 0;
+				for (int j = 1; j <= n; j++) {
+					if (visited[j])
+						b++;
+				}
+
+				if (a + b + 1 == n) {
+					result++;
+				}
+			}
+
+			sb.append("#").append(tc).append(" ").append(result);
+			System.out.println(sb);
+			sb.setLength(0);
+		}
+	}
+
+	static void subTree(int node) {
+		for (int i = 1; i <= n; i++) {
+			boolean tmp = edge[node][i];
+			if (tmp) {
+				if (!visited[i]) {
+					visited[i] = true;
+					subTree(i);
+				}
+			}
+		}
+	}
+
+	static void subTreeReverse(int node) {
+		for (int i = 1; i <= n; i++) {
+			boolean tmp = edge[i][node];
+			if (tmp) {
+				if (!visited[i]) {
+					visited[i] = true;
+					subTreeReverse(i);
+				}
+			}
+		}
+	}
+}
