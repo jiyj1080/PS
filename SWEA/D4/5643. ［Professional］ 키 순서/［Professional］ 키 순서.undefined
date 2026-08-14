@@ -4,8 +4,6 @@ import java.util.*;
 public class Solution {
 	static int n, m;
 	static boolean[][] edge;
-	static boolean[] visited;
-	static int[] tallerCount, smallerCount;
 
 	public static void main(String[] args) throws Exception {
 		//System.setIn(new FileInputStream("input.txt"));
@@ -20,9 +18,6 @@ public class Solution {
 			int result = 0;
 			n = Integer.parseInt(br.readLine());
 			edge = new boolean[n + 1][n + 1];
-			visited = new boolean[n + 1];
-			tallerCount = new int[n + 1];
-			smallerCount = new int[n + 1];
 			m = Integer.parseInt(br.readLine());
 			for (int i = 0; i < m; i++) {
 				st = new StringTokenizer(br.readLine());
@@ -32,33 +27,31 @@ public class Solution {
 			}
 
 			for (int i = 1; i <= n; i++) {
-				Arrays.fill(visited, false);
-				subTreeOpti(i, i);
+				edge[i][i] = true;
 			}
-			
-			for (int i = 1; i <= n; i++) {
-				if (tallerCount[i] + smallerCount[i] + 1 == n) {
-					result++;
+
+			for (int k = 1; k <= n; k++) {
+				for (int i = 1; i <= n; i++) {
+					for (int j = 1; j <= n; j++) {
+						if (edge[i][k] && edge[k][j]) {
+							edge[i][j] = true;
+						}
+					}
 				}
+			}
+
+			for (int node = 1; node <= n; node++) {
+				boolean check = true;
+				for (int to = 1; to <= n; to++) {
+					check = check && (edge[node][to] || edge[to][node]);
+				}
+				if (check)
+					result++;
 			}
 
 			sb.append("#").append(tc).append(" ").append(result);
 			System.out.println(sb);
 			sb.setLength(0);
-		}
-	}
-	
-	static void subTreeOpti(int start, int current) {
-		for (int next = 1; next <= n; next++) {
-			if (edge[current][next] && !visited[next]) {
-				visited[next] = true;
-				
-				tallerCount[start]++;
-				
-				smallerCount[next]++;
-				
-				subTreeOpti(start, next);
-			}
 		}
 	}
 
