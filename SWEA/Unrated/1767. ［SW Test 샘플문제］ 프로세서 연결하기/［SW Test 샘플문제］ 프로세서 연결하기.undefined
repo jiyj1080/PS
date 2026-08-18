@@ -1,0 +1,104 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+	static final int[] dr = { 0, 1, 0, -1 };
+	static final int[] dc = { 1, 0, -1, 0 };
+
+	static int n, result, coreCount, maxConnected;
+	static int[][] map = new int[12][12];
+	static int[][] core = new int[12][2];
+
+	public static void main(String[] args) throws Exception {
+		//System.setIn(new FileInputStream("input.txt"));
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		int T = Integer.parseInt(br.readLine());
+
+		for (int tc = 1; tc <= T; tc++) {
+			sb.append("#").append(tc).append(" ");
+
+			n = Integer.parseInt(br.readLine());
+			result = Integer.MAX_VALUE;
+			coreCount = 0;
+			maxConnected = 0;
+			for (int i = 0; i < n; i++) {
+				st = new StringTokenizer(br.readLine());
+				for (int j = 0; j < n; j++) {
+					int t = Integer.parseInt(st.nextToken());
+					map[i][j] = t;
+					if (t == 1) {
+						if (i == 0 || j == 0 || i == n - 1 || j == n - 1) {
+							maxConnected++;
+						} else {
+							core[coreCount][0] = i;
+							core[coreCount][1] = j;
+							coreCount++;
+						}
+					}
+				}
+			}
+
+			dfs(0, 0, maxConnected);
+
+			sb.append(result);
+			System.out.println(sb);
+			sb.setLength(0);
+		}
+	}
+
+	static void dfs(int depth, int wires, int connected) {
+		
+		// end condition
+		if (depth == coreCount) {
+			if (connected > maxConnected) {
+				maxConnected = connected;
+				result = wires;
+			} else if (connected == maxConnected) {
+				result = Math.min(result, wires);
+			}
+			return;
+		}
+
+		// skip connect
+		dfs(depth + 1, wires, connected);
+				
+		int r = core[depth][0];
+		int c = core[depth][1];
+		// check wire connect condition for each direction
+		for (int d = 0; d < 4; d++) {
+			int wire = 0;
+			boolean connection = true;
+			int nr = r + dr[d];
+			int nc = c + dc[d];
+			
+			// 연결 가능성 탐색
+			while (nr >= 0 && nr < n && nc >= 0 && nc < n) {
+				if (map[nr][nc] != 0) {
+					connection = false;
+					break;
+				}
+				map[nr][nc] = 2;
+				nr += dr[d];
+				nc += dc[d];
+				wire++;
+			}
+
+			// 연결 가능할 시 dfs
+			if (connection) {
+				dfs(depth + 1, wires + wire, connected + 1);
+			}
+			
+			// 원상복귀
+			while (nr != r || nc != c) {
+				nr -= dr[d];
+				nc -= dc[d];
+				map[nr][nc] = 0;
+			}
+			map[r][c] = 1;
+		}
+	}
+}
