@@ -51,6 +51,10 @@ public class Solution {
 	}
 
 	static void dfs(int depth, int wires, int connected) {
+		// pruning
+		if (connected + (coreCount - depth) < maxConnected) {
+			return;
+		}
 		
 		// end condition
 		if (depth == coreCount) {
