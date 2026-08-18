@@ -67,8 +67,6 @@ public class Solution {
 			return;
 		}
 
-		// skip connect
-		dfs(depth + 1, wires, connected);
 				
 		int r = core[depth][0];
 		int c = core[depth][1];
@@ -104,5 +102,8 @@ public class Solution {
 			}
 			map[r][c] = 1;
 		}
+        
+		// skip connect
+		dfs(depth + 1, wires, connected);
 	}
 }
