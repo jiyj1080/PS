@@ -5,7 +5,7 @@ public class Solution {
 	static final int[] dr = { 0, 1, 0, -1 };
 	static final int[] dc = { 1, 0, -1, 0 };
 
-	static int n, result;
+	static int n;
 	static int[][] map = new int[100][100];
 	static int[][] distance = new int[100][100];
 
@@ -34,7 +34,6 @@ public class Solution {
 		int T = Integer.parseInt(br.readLine());
 
 		for (int tc = 1; tc <= T; tc++) {
-			result = Integer.MAX_VALUE;
 			n = Integer.parseInt(br.readLine());
 
 			for (int i = 0; i < n; i++) {
@@ -46,11 +45,11 @@ public class Solution {
 			}
 
 			sb.append("#").append(tc).append(" ").append(dijkstra());
-			System.out.println(sb);
-			sb.setLength(0);
-//			sb.append("\n");
+//			System.out.println(sb);
+//			sb.setLength(0);
+			sb.append("\n");
 		}
-//		System.out.println(sb);
+		System.out.println(sb);
 	}
 
 	static int dijkstra() {
