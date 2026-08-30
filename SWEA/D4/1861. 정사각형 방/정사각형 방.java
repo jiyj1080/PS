@@ -5,9 +5,9 @@ public class Solution {
 	static final int[] dr = { 0, 1, 0, -1 };
 	static final int[] dc = { 1, 0, -1, 0 };
 
-	static int n, start, count;
+	static int n;
 	static int[][] map = new int[1000][1000];
-	static boolean[][] visited = new boolean[1000][1000];
+	static boolean[] canMove;
 
 	public static void main(String[] args) throws Exception {
 //		System.setIn(new FileInputStream("res/sample_input.txt"));
@@ -20,65 +20,51 @@ public class Solution {
 
 		for (int tc = 1; tc <= T; tc++) {
 			n = Integer.parseInt(br.readLine());
+			canMove = new boolean[n * n + 1];
 
 			for (int r = 0; r < n; r++) {
 				st = new StringTokenizer(br.readLine());
 				for (int c = 0; c < n; c++) {
 					map[r][c] = Integer.parseInt(st.nextToken());
-					visited[r][c] = false;
 				}
 			}
 
 			// solve
-			int answer_start = Integer.MAX_VALUE, answer_count = 0;
+			
+			// canMove
 			for (int r = 0; r < n; r++) {
 				for (int c = 0; c < n; c++) {
-					if (visited[r][c])
-						continue;
-					visited[r][c] = true;
-
-					start = map[r][c];
-					count = 1;
-					dfs(r, c);
-
-					if (count > answer_count) {
-						answer_count = count;
-						answer_start = start;
-					} else if (count == answer_count) {
-						answer_start = Math.min(answer_start, start);
+					int num = map[r][c];
+					for (int d = 0; d < 4; d++) {
+						int nr = r + dr[d];
+						int nc = c + dc[d];
+						
+						if (nr >= 0 && nr < n && nc >= 0 && nc < n && map[nr][nc] == num + 1) {
+			                canMove[num] = true;
+			                break;
+			            }
 					}
 				}
 			}
+			
+			// iterate from behind
+			int maxCount = 1, startNum = 1, currentCount = 1;
+			for (int i = n * n - 1; i >= 1; i--) {
+				if (canMove[i]) {
+			        currentCount++;
+			    } else {
+			        currentCount = 1;
+			    }
 
-			sb.append("#").append(tc).append(" ").append(answer_start).append(" ").append(answer_count);
+			    if (currentCount >= maxCount) {
+			        maxCount = currentCount;
+			        startNum = i;
+			    }
+			}
+
+			sb.append("#").append(tc).append(" ").append(startNum).append(" ").append(maxCount);
 			System.out.println(sb);
 			sb.setLength(0);
-		}
-	}
-
-	static void dfs(int r, int c) {
-		int num = map[r][c];
-
-		for (int d = 0; d < 4; d++) {
-			int nr = r + dr[d];
-			int nc = c + dc[d];
-
-			if (nr < 0 || nr >= n || nc < 0 || nc >= n || visited[nr][nc])
-				continue;
-
-			// to lower
-			if (map[nr][nc] == num - 1) {
-				visited[nr][nc] = true;
-				start = num - 1;
-				count++;
-				dfs(nr, nc);
-			}
-			// to upper
-			else if (map[nr][nc] == num + 1) {
-				visited[nr][nc] = true;
-				count++;
-				dfs(nr, nc);
-			}
 		}
 	}
 }
