@@ -3,7 +3,7 @@ import java.io.*;
 
 public class Solution {
 	static int win, lose;
-	static int[] kyuyoung = new int[9], cardLeft = new int[9];
+	static int[] kyuyoung = new int[9], inyoung = new int[9];
 
 	public static void main(String[] args) throws Exception {
 //		System.setIn(new FileInputStream("res/input.txt"));
@@ -26,49 +26,36 @@ public class Solution {
 			int cnt = 0;
 			for (int n = 1; n <= 18; n++) {
 				if (!used[n])
-					cardLeft[cnt++] = n;
+					inyoung[cnt++] = n;
 			}
 
 			// solve
-			dfs(0);
+			dfs(0, 0, 0);
 
 			sb.append("#").append(tc).append(" ").append(win).append(" ").append(lose).append("\n");
 		}
 		System.out.println(sb);
 	}
-
-	static int[] inyoung = new int[9];
+	
 	static boolean[] used = new boolean[9];
 
-	static void dfs(int cnt) {
+	static void dfs(int cnt, int kyuScore, int inScore) {
 		if (cnt == 9) {
-			fight();
+			if (kyuScore > inScore) win++;
+			else if (kyuScore < inScore) lose++;
 		}
 
 		for (int i = 0; i < 9; i++) {
 			if (used[i])
 				continue;
-
-			inyoung[cnt] = cardLeft[i];
+			
 			used[i] = true;
 
-			dfs(cnt + 1);
+			int score = kyuyoung[cnt] + inyoung[i];
+			if (kyuyoung[cnt] > inyoung[i]) dfs(cnt + 1, kyuScore + score, inScore);
+			else dfs(cnt + 1, kyuScore, inScore + score);
 
 			used[i] = false;
 		}
-	}
-
-	static void fight() {
-		int kyu = 0, in = 0;
-		for (int i = 0; i < 9; i++) {
-			int score = kyuyoung[i] + inyoung[i];
-			if (kyuyoung[i] > inyoung[i]) {
-				kyu += score;
-			} else {
-				in += score;
-			}
-		}
-		if (kyu > in) win++;
-		else if (kyu < in) lose++;
 	}
 }
