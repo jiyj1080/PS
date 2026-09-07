@@ -6,7 +6,7 @@ public class Solution {
 	static boolean[][] edge;// = new int[1010][1010];
 
 	public static void main(String[] args) throws Exception {
-	//	System.setIn(new FileInputStream("input.txt"));
+//		System.setIn(new FileInputStream("res/input.txt"));
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
@@ -27,48 +27,56 @@ public class Solution {
 			}
 			
 			// solve
-			// floyd-warshall
-			for (int k = 1; k <= v; k++) {
-				for (int i = 1; i <= v; i++) {
-					if (!edge[i][k])
+			List<Integer> answer = new LinkedList<>();
+			
+			// topological sort - bfs
+			
+			// in degree
+			int[] inDegree = new int [v + 1];
+			for (int from = 1; from <= v; from++) {
+				for (int to = 1; to <= v; to++) {
+					if (edge[from][to])
+						inDegree[to]++;
+				}
+			}
+			
+			// bfs
+			Queue<Integer> q = new ArrayDeque<>();
+			boolean[] visited = new boolean[v + 1];
+			
+			// push 0 in degree node
+			for (int node = 1; node <= v; node++) {
+				if (inDegree[node] == 0) {
+					q.offer(node);
+					visited[node] = true;
+				}
+			}
+			
+			// 
+			while (!q.isEmpty()) {
+				int cur = q.poll();
+				answer.add(cur);
+				
+				for (int to = 1; to <= v; to++) {
+					if (!edge[cur][to] || visited[to])
 						continue;
-					for (int j = 1; j <= v; j++) {
-						if (edge[k][j])
-							edge[i][j] = true;
+					
+					if (--inDegree[to] == 0) {
+						q.offer(to);
+						visited[to] = true;
 					}
 				}
 			}
 			
-			// make hash set for each node storing front nodes
-			List<HashSet<Integer>> fronts = new ArrayList<>();
-			//empty for index 0
-			fronts.add(new HashSet<>());
-			for (int i = 1; i <= v; i++) {
-				HashSet<Integer> front = new HashSet<>();
-				for (int j = 1; j <= v; j++) {
-					if (edge[j][i])
-						front.add(j);
-				}
-				fronts.add(front);
-			}
-			
-			List<Integer> answer = new LinkedList<>();
-			for (int i = 1; i <= v; i++) {
-				int idx = 0;
-				HashSet<Integer> front = fronts.get(i);
-				for (int j = 0; j < answer.size(); j++) {
-					if (front.contains(answer.get(j)))
-						idx = j + 1;
-				}
-				answer.add(idx, i);
-			}
 			
 			sb.append("#").append(tc);
 			for (int i : answer) {
 				sb.append(" ").append(i);
 			}
-			System.out.println(sb);
-			sb.setLength(0);
+			sb.append("\n");
+//			System.out.println(sb);
+//			sb.setLength(0);
 		}
+		System.out.println(sb);
 	}
 }
