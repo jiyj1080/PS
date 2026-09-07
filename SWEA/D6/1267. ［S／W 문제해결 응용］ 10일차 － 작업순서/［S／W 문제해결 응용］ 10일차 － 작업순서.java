@@ -4,6 +4,8 @@ import java.util.*;
 public class Solution {
 	static int v, e;
 	static boolean[][] edge;// = new int[1010][1010];
+	static List<Integer> answer;
+	static boolean[] visited;
 
 	public static void main(String[] args) throws Exception {
 //		System.setIn(new FileInputStream("res/input.txt"));
@@ -27,47 +29,18 @@ public class Solution {
 			}
 			
 			// solve
-			List<Integer> answer = new LinkedList<>();
+			answer = new LinkedList<>();
 			
-			// topological sort - bfs
+			// topological sort - dfs
+
+			visited = new boolean[v + 1];
 			
-			// in degree
-			int[] inDegree = new int [v + 1];
-			for (int from = 1; from <= v; from++) {
-				for (int to = 1; to <= v; to++) {
-					if (edge[from][to])
-						inDegree[to]++;
-				}
-			}
-			
-			// bfs
-			Queue<Integer> q = new ArrayDeque<>();
-			boolean[] visited = new boolean[v + 1];
-			
-			// push 0 in degree node
 			for (int node = 1; node <= v; node++) {
-				if (inDegree[node] == 0) {
-					q.offer(node);
+				if (!visited[node]) {
 					visited[node] = true;
+					dfs(node);
 				}
 			}
-			
-			// 
-			while (!q.isEmpty()) {
-				int cur = q.poll();
-				answer.add(cur);
-				
-				for (int to = 1; to <= v; to++) {
-					if (!edge[cur][to] || visited[to])
-						continue;
-					
-					if (--inDegree[to] == 0) {
-						q.offer(to);
-						visited[to] = true;
-					}
-				}
-			}
-			
 			
 			sb.append("#").append(tc);
 			for (int i : answer) {
@@ -78,5 +51,18 @@ public class Solution {
 //			sb.setLength(0);
 		}
 		System.out.println(sb);
+	}
+	
+	static void dfs(int node) {
+		
+		for (int to = 1; to <= v; to++) {
+			if (!edge[node][to] || visited[to])
+				continue;
+			
+			visited[to] = true;
+			dfs(to);
+		}
+		
+		answer.add(0, node);
 	}
 }
