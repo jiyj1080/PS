@@ -15,8 +15,6 @@ public class Solution {
 		for (int tc = 1; tc <= T; tc++) {
 			count = 0;
 			n = Integer.parseInt(br.readLine());
-			
-			attacked = new int[n][n];
 
 			// solve
 			dfs(0);
@@ -51,8 +49,6 @@ public class Solution {
 		for (int d = 0; d < 8; d++) {
 			int nr = r + dr[d];
 			int nc = c + dc[d];
-			// nr >= 0 && nr < n && nc >= 0 && nc < n
-			// nr < 0 || nr >= n || nc < 0 || nc >= n
 			while (nr >= 0 && nr < n && nc >= 0 && nc < n) {
 				attacked[nr][nc]++;
 				nr += dr[d];
