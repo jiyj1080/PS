@@ -35,6 +35,9 @@ public class Solution {
 	}
 	
 	static void dfs(int depth, int curCost) {
+		if (curCost >= minCost)
+			return;
+		
 		if (depth >= 12) {
 			minCost = Math.min(minCost, curCost);
 			return;
