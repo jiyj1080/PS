@@ -1,0 +1,42 @@
+import java.util.*;
+import java.io.*;
+
+public class Solution {
+	static int n, maxHeight, minDate;
+	static int[] trees = new int[100];
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		int T = Integer.parseInt(br.readLine());
+		for (int tc = 1; tc <= T; tc++) {
+			maxHeight = 0;
+			minDate = 0;
+			n = Integer.parseInt(br.readLine());
+			st = new StringTokenizer(br.readLine());
+			for (int i = 0; i < n; i++) {
+				maxHeight = Math.max(maxHeight, trees[i] = Integer.parseInt(st.nextToken()));
+			}
+
+			// solve
+			int oneCnt = 0, twoCnt = 0;
+			for (int i = 0; i < n; i++) {
+				int gap = maxHeight - trees[i];
+				oneCnt += gap % 2;
+				twoCnt += gap / 2;
+			}
+
+			while (oneCnt + 1 < twoCnt) {
+				twoCnt--;
+				oneCnt += 2;
+			}
+
+			minDate += Math.max(oneCnt, twoCnt) * 2 - (oneCnt > twoCnt ? 1 : 0);
+
+			sb.append("#").append(tc).append(" ").append(minDate).append("\n");
+		}
+		System.out.println(sb);
+	}
+}
