@@ -1,0 +1,67 @@
+import java.util.*;
+import java.io.*;
+
+class Solution {
+	static int N, M, parent[], rank[];
+
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
+
+		int T = Integer.parseInt(br.readLine());
+		for (int tc = 1; tc <= T; tc++) {
+			sb.append("#").append(tc).append(" ");// .append("\n")
+			st = new StringTokenizer(br.readLine());
+			N = Integer.parseInt(st.nextToken()); // 1 <= N <= 1,000,000
+			M = Integer.parseInt(st.nextToken()); // 1 <= M <= 100,000
+			parent = new int[N + 1];
+			rank = new int[N + 1];
+			for (int i = 1; i <= N; i++) {
+				parent[i] = i;
+			}
+			for (int i = 0; i < M; i++) {
+				st = new StringTokenizer(br.readLine());
+				int op = Integer.parseInt(st.nextToken());
+				int a = Integer.parseInt(st.nextToken());
+				int b = Integer.parseInt(st.nextToken());
+				if (op == 0) {
+					if (a != b)
+						union(a, b);
+				} else {
+					if (a != b)
+						sb.append(findSet(a) == findSet(b) ? 1 : 0);
+					else
+						sb.append(1);
+				}
+			}
+
+			System.out.println(sb);
+			sb.setLength(0);
+		}
+//		System.out.println(sb);
+	}
+
+	static void union(int a, int b) {
+		int parentA = findSet(a);
+		int parentB = findSet(b);
+		// skip if same parent
+		if (parentA == parentB)
+			return;
+
+		if (rank[parentA] == rank[parentB]) {
+			rank[parentA]++;
+			parent[parentB] = parentA;
+		} else if (rank[parentA] > rank[parentB]) {
+			parent[parentB] = parentA;
+		} else {
+			parent[parentA] = parentB;
+		}
+	}
+
+	static int findSet(int a) {
+		if (parent[a] == a)
+			return a;
+		return parent[a] = findSet(parent[a]);
+	}
+}
