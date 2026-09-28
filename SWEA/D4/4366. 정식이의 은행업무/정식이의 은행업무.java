@@ -1,5 +1,6 @@
 import java.util.*;
 import java.io.*;
+import java.math.BigInteger;
 
 class Solution {
 	
@@ -9,7 +10,7 @@ class Solution {
 		int T = Integer.parseInt(in.readLine());
 		
 		for (int tc = 1; tc <= T; tc++) {
-			int answer = 0;
+			long answer = 0;
 			
 			char[] two = in.readLine().toCharArray();
 			char[] three = in.readLine().toCharArray();
@@ -21,8 +22,9 @@ class Solution {
 					for (int k = 0; k < 3; k++) {
 						if (original == (three[j] = (char) ('0' + k)))
 							continue;
-						int d1 = twoToDecimal(two);
-						int d2 = threeToDecimal(three);
+						
+						long d1 = twoToDecimal(two);
+						long d2 = threeToDecimal(three);
 						if (d1 == d2) {
 							answer = d1;
 							break A;
@@ -37,8 +39,8 @@ class Solution {
 		}
 	}
 
-	private static int threeToDecimal(char[] three) {
-		int result = 0;
+	private static long threeToDecimal(char[] three) {
+		long result = 0;
 		for (int i = 0; i < three.length; i++) {
 			result *= 3;
 			if (three[i] == '1')
@@ -49,8 +51,8 @@ class Solution {
 		return result;
 	}
 
-	private static int twoToDecimal(char[] two) {
-		int result = 0;
+	private static long twoToDecimal(char[] two) {
+		long result = 0;
 		for (int i = 0; i < two.length; i++) {
 			result *= 2;
 			if (two[i] == '1')
