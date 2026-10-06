@@ -23,9 +23,7 @@ class Solution {
     public int solution(int n, int[][] costs) {
         init(n, costs);
         
-        int result = kruskal(n);
-        
-        return result;
+        return kruskal(n);
     }
     
     private static void init(int n, int[][] costs) {
