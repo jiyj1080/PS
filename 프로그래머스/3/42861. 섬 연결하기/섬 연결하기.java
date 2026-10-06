@@ -23,7 +23,7 @@ class Solution {
     public int solution(int n, int[][] costs) {
         init(n, costs);
         
-        int result = kruskal(n, costs);
+        int result = kruskal(n);
         
         return result;
     }
@@ -37,16 +37,16 @@ class Solution {
             edges[i] = new Edge(costs[i][0], costs[i][1], costs[i][2]);
         }
         
-        parent = new int[n + 1];
-        size = new int[n + 1];
+        parent = new int[n];
+        size = new int[n];
         
-        for (int i = 1; i <= n; i++) {
+        for (int i = 0; i < n; i++) {
             parent[i] = i;
             size[i] = 1;
         }
     }
     
-    private static int kruskal(int n, int[][] costs) {
+    private static int kruskal(int n) {
         Arrays.sort(edges);
         
         int cost = 0;
@@ -83,9 +83,9 @@ class Solution {
         }
         
         if (size[rootA] < size[rootB]) {
-            int temp = size[rootA];
-            size[rootA] = size[rootB];
-            size[rootB] = temp;
+            int temp = rootA;
+            rootA = rootB;
+            rootB = temp;
         }
         
         size[rootA] += size[rootB];
