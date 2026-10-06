@@ -1,40 +1,16 @@
 import java.util.*;
 
 class Solution {
-    static class Edge implements Comparable<Edge> {
-        final int from, to, dist;
-        
-        Edge(int from, int to, int dist) {
-            this.from = from;
-            this.to = to;
-            this.dist = dist;
-        }
-        
-        @Override
-        public int compareTo(Edge other) {
-            return Integer.compare(this.dist, other.dist);
-        }
-    }
-    
-    private static Edge[] edges;
     private static int[] parent;
     private static int[] size;
     
     public int solution(int n, int[][] costs) {
-        init(n, costs);
+        init(n);
         
-        return kruskal(n);
+        return kruskal(n, costs);
     }
     
-    private static void init(int n, int[][] costs) {
-        int m = costs.length;
-        
-        edges = new Edge[m];
-        
-        for (int i = 0; i < m; i++) {
-            edges[i] = new Edge(costs[i][0], costs[i][1], costs[i][2]);
-        }
-        
+    private static void init(int n) {
         parent = new int[n];
         size = new int[n];
         
@@ -44,24 +20,28 @@ class Solution {
         }
     }
     
-    private static int kruskal(int n) {
-        Arrays.sort(edges);
+    private static int kruskal(int n, int[][] costs) {
+        // Arrays.sort(costs, (a, b) -> Integer.compare(a[2], b[2]));
+        Arrays.sort(costs, Comparator.comparingInt(a -> a[2]));
         
-        int cost = 0;
+        int totalCost = 0;
         int edgeCount = 0;
         
-        for (Edge edge : edges) {
-            if (union(edge.from, edge.to)) {
-                cost += edge.dist;
-                edgeCount++;
+        for (int[] cost : costs) {
+            int from = cost[0];
+            int to = cost[1];
+            int dist = cost[2];
+            
+            if (union(from, to)) {
+                totalCost += dist;
                 
-                if (edgeCount == n - 1) {
+                if (++edgeCount == n - 1) {
                     break;
                 }
             }
         }
         
-        return cost;
+        return totalCost;
     }
     
     private static int find(int x) {
