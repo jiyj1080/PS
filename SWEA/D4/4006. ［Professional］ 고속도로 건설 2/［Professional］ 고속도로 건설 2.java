@@ -56,12 +56,12 @@ class Solution {
 			PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> Integer.compare(a.weight, b.weight));
 			pq.add(new Node(0, 0));
 
-			for (int c = 0; c < V; c++) {
+			while (!pq.isEmpty()) {
 				// 1. poll
 				Node cur = pq.poll();
-				while (visited[cur.to] || minEdge[cur.to] != cur.weight) {
-					cur = pq.poll();
-				}
+				
+				if (visited[cur.to])
+					continue;
 				
 				visited[cur.to] = true;
 				totalCost += cur.weight;
