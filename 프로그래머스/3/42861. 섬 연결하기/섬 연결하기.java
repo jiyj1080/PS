@@ -25,19 +25,17 @@ class Solution {
     }
     
     private static int n;
-    private static int[][] costs;
     private static List<List<Edge>> graph;
     
     public int solution(int n, int[][] costs) {
-        this.n = n;
-        this.costs = costs;
+        Solution.n = n;
         
-        init();
+        init(costs);
         
         return prim();
     }
     
-    private static void init() {
+    private static void init(int[][] costs) {
         graph = new ArrayList<>();
         
         for (int i = 0; i < n; i++) {
@@ -60,10 +58,10 @@ class Solution {
         PriorityQueue<State> pq = new PriorityQueue<>();
         
         boolean[] visited = new boolean[n]; 
-        int[] dist = new int[n];
-        Arrays.fill(dist, Integer.MAX_VALUE);
+        int[] minDist = new int[n];
+        Arrays.fill(minDist, Integer.MAX_VALUE);
         
-        dist[0] = 0;
+        minDist[0] = 0;
         pq.offer(new State(0, 0));
         
         while (!pq.isEmpty()) {
@@ -81,11 +79,11 @@ class Solution {
                 int next = edge.to;
                 int nextDist = edge.dist;
                 
-                if (visited[next] || nextDist >= dist[next]) {
+                if (visited[next] || nextDist >= minDist[next]) {
                     continue;
                 }
                 
-                dist[next] = nextDist;
+                minDist[next] = nextDist;
                 pq.offer(new State(next, nextDist));
             }        
         }
