@@ -1,74 +1,95 @@
 import java.util.*;
 
 class Solution {
-    private static int[] parent;
-    private static int[] size;
+    static class Edge {
+        final int to, dist;
+        
+        Edge(int to, int dist) {
+            this.to = to;
+            this.dist = dist;
+        }
+    }
+    
+    static class State implements Comparable<State> {
+        final int to, dist;
+        
+        State(int to, int dist) {
+            this.to = to;
+            this.dist = dist;
+        }
+        
+        @Override
+        public int compareTo(State other) {
+            return Integer.compare(this.dist, other.dist);
+        }
+    }
+    
+    private static int n;
+    private static int[][] costs;
+    private static List<List<Edge>> graph;
     
     public int solution(int n, int[][] costs) {
-        init(n);
+        this.n = n;
+        this.costs = costs;
         
-        return kruskal(n, costs);
+        init();
+        
+        return prim();
     }
     
-    private static void init(int n) {
-        parent = new int[n];
-        size = new int[n];
+    private static void init() {
+        graph = new ArrayList<>();
         
         for (int i = 0; i < n; i++) {
-            parent[i] = i;
-            size[i] = 1;
+            graph.add(new ArrayList<>());
         }
-    }
-    
-    private static int kruskal(int n, int[][] costs) {
-        // Arrays.sort(costs, (a, b) -> Integer.compare(a[2], b[2]));
-        Arrays.sort(costs, Comparator.comparingInt(a -> a[2]));
         
-        int totalCost = 0;
-        int edgeCount = 0;
-        
-        for (int[] cost : costs) {
-            int from = cost[0];
-            int to = cost[1];
-            int dist = cost[2];
+        for (int i = 0; i < costs.length; i++) {
+            int from = costs[i][0];
+            int to = costs[i][1];
+            int dist = costs[i][2];
             
-            if (union(from, to)) {
-                totalCost += dist;
-                
-                if (++edgeCount == n - 1) {
-                    break;
-                }
+            graph.get(from).add(new Edge(to, dist));
+            graph.get(to).add(new Edge(from, dist));
+        }
+    }
+    
+    private static int prim() {
+        int result = 0;
+        
+        PriorityQueue<State> pq = new PriorityQueue<>();
+        
+        boolean[] visited = new boolean[n]; 
+        int[] dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        
+        dist[0] = 0;
+        pq.offer(new State(0, 0));
+        
+        while (!pq.isEmpty()) {
+            State current = pq.poll();
+            
+            if (visited[current.to]) {
+                continue;
             }
+            
+            visited[current.to] = true;
+            
+            result += current.dist;
+            
+            for (Edge edge : graph.get(current.to)) {
+                int next = edge.to;
+                int nextDist = edge.dist;
+                
+                if (visited[next] || nextDist >= dist[next]) {
+                    continue;
+                }
+                
+                dist[next] = nextDist;
+                pq.offer(new State(next, nextDist));
+            }        
         }
         
-        return totalCost;
-    }
-    
-    private static int find(int x) {
-        if (parent[x] == x) {
-            return x;
-        }
-        
-        return parent[x] = find(parent[x]);
-    }
-    
-    private static boolean union(int a, int b) {
-        int rootA = find(a);
-        int rootB = find(b);
-        
-        if (rootA == rootB) {
-            return false;
-        }
-        
-        if (size[rootA] < size[rootB]) {
-            int temp = rootA;
-            rootA = rootB;
-            rootB = temp;
-        }
-        
-        size[rootA] += size[rootB];
-        parent[rootB] = rootA;
-        
-        return true;
+        return result;
     }
 }
