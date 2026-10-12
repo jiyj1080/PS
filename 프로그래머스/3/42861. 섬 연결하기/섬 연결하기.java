@@ -1,93 +1,63 @@
 import java.util.*;
 
 class Solution {
-    static class Edge {
-        final int to, dist;
+    
+    class Edge {
+        int to, weight;
         
-        Edge(int to, int dist) {
+        Edge(int to, int weight) {
             this.to = to;
-            this.dist = dist;
+            this.weight = weight;
         }
     }
     
-    static class State implements Comparable<State> {
-        final int to, dist;
+    class Vertex {
+        int id, dist;
         
-        State(int to, int dist) {
-            this.to = to;
+        Vertex(int id, int dist) {
+            this.id = id;
             this.dist = dist;
         }
-        
-        @Override
-        public int compareTo(State other) {
-            return Integer.compare(this.dist, other.dist);
-        }
     }
-    
-    private static int n;
-    private static List<List<Edge>> graph;
     
     public int solution(int n, int[][] costs) {
-        Solution.n = n;
+        int answer = 0;
         
-        init(costs);
-        
-        return prim();
-    }
-    
-    private static void init(int[][] costs) {
-        graph = new ArrayList<>();
-        
+        List<Edge>[] adjList = new ArrayList[n];
         for (int i = 0; i < n; i++) {
-            graph.add(new ArrayList<>());
+            adjList[i] = new ArrayList<>();
         }
         
-        for (int i = 0; i < costs.length; i++) {
-            int from = costs[i][0];
-            int to = costs[i][1];
-            int dist = costs[i][2];
-            
-            graph.get(from).add(new Edge(to, dist));
-            graph.get(to).add(new Edge(from, dist));
+        for (int[] cost : costs) {
+            int from = cost[0], to = cost[1], weight = cost[2];
+            adjList[from].add(new Edge(to, weight));
+            adjList[to].add(new Edge(from, weight));
         }
-    }
-    
-    private static int prim() {
-        int result = 0;
         
-        PriorityQueue<State> pq = new PriorityQueue<>();
+        Queue<Vertex> pq = new PriorityQueue<>((a, b) -> Integer.compare(a.dist, b.dist));
         
-        boolean[] visited = new boolean[n]; 
+        boolean[] visited = new boolean[n];
         int[] minDist = new int[n];
         Arrays.fill(minDist, Integer.MAX_VALUE);
-        
         minDist[0] = 0;
-        pq.offer(new State(0, 0));
-        
+        pq.offer(new Vertex(0, 0));
         while (!pq.isEmpty()) {
-            State current = pq.poll();
+            Vertex cur = pq.poll();
             
-            if (visited[current.to]) {
+            if (visited[cur.id])
                 continue;
-            }
             
-            visited[current.to] = true;
+            visited[cur.id] = true;
+            answer += cur.dist;
             
-            result += current.dist;
-            
-            for (Edge edge : graph.get(current.to)) {
-                int next = edge.to;
-                int nextDist = edge.dist;
-                
-                if (visited[next] || nextDist >= minDist[next]) {
-                    continue;
+            for(Edge edge : adjList[cur.id]) {
+                if (!visited[edge.to] && edge.weight < minDist[edge.to]) {
+                    minDist[edge.to] = edge.weight;
+                    pq.offer(new Vertex(edge.to, edge.weight));
                 }
-                
-                minDist[next] = nextDist;
-                pq.offer(new State(next, nextDist));
-            }        
+            }
         }
         
-        return result;
+        return answer;
     }
 }
