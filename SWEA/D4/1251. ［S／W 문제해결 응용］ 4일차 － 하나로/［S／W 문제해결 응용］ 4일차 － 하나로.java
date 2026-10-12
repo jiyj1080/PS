@@ -2,6 +2,20 @@ import java.util.*;
 import java.io.*;
 
 class Solution {
+	
+	static class Edge {
+		int from, to;
+		double weight;
+		
+		public Edge(int from, int to, double weight) {
+			super();
+			this.from = from;
+			this.to = to;
+			this.weight = weight;
+		}
+	}
+	
+	static int N;
 
 	public static void main(String[] args) throws Exception {
 		//System.setIn(new FileInputStream("res/input.txt"));
@@ -9,9 +23,10 @@ class Solution {
 
 		int T = Integer.parseInt(in.readLine());
 		for (int tc = 1; tc <= T; tc++) {
-			int N = Integer.parseInt(in.readLine());
+			double totalCost = 0.0;
+			N = Integer.parseInt(in.readLine());
 			
-			double[][] adjMatrix = new double[N][N];
+			List<Edge> edges = new ArrayList<>();
 			double[] X = new double[N];
 			double[] Y = new double[N];			
 			StringTokenizer stX = new StringTokenizer(in.readLine());
@@ -23,54 +38,61 @@ class Solution {
 			double E = Double.parseDouble(in.readLine());
 			
 			/**
-			 * MST-Prim
+			 * MST-Kruskal
 			 */
 			
 			for (int from = 0; from < N; from++) {
 				for (int to = from + 1; to < N; to++) {
-					adjMatrix[from][to] = adjMatrix[to][from] 
-							= Math.pow(X[from] - X[to], 2) + Math.pow(Y[from] - Y[to], 2);
-//							= (X[from] - X[to]) * (X[from] - X[to]) + (Y[from] - Y[to]) * (Y[from] - Y[to]);
+					edges.add(new Edge(from, to, Math.pow(X[from] - X[to], 2) + Math.pow(Y[from] - Y[to], 2)));
 				}
 			}
 			
-			boolean[] visited = new boolean[N];
-			double[] minDist = new double[N];
-			Arrays.fill(minDist, Double.MAX_VALUE);
+			edges.sort((a, b) -> Double.compare(a.weight, b.weight));
 			
-			minDist[0] = 0;
+			makeSet();
 			
-			double totalCost = 0.0;
-			
-			for (int i = 0; i < N; i++) {
-				// find cur
-				double min = Double.MAX_VALUE;
-				int idx = -1;
-				
-				for (int j = 0; j < N; j++) {
-					if (!visited[j] && minDist[j] < min) {
-						min = minDist[j];
-						idx = j;
-					}
-				}
-				
-				if (visited[idx])
+			int count = 0;
+			for (Edge edge : edges) {
+				if(!union(edge.from, edge.to))
 					continue;
 				
-				totalCost += E * minDist[idx];
-				visited[idx] = true;
+				if (++count == N)
+					break;
 				
-				for (int next = 0; next < N; next++) {
-					if (next == idx)
-						continue;
-					
-					if (!visited[next] && adjMatrix[idx][next] < minDist[next]) {
-						minDist[next] = adjMatrix[idx][next];
-					}
-				}
+				totalCost += E * edge.weight;
 			}
-
-			System.out.printf("#%d %.0f\n", tc, totalCost);
+			
+			System.out.println("#" + tc + " " + Math.round(totalCost));
 		}
+	}
+	
+	static int[] parents;
+	
+	static void makeSet() {
+		parents = new int[N];
+		Arrays.fill(parents, -1);
+	}
+	
+	static int find(int a) {
+		if (parents[a] < 0) return a;
+		return parents[a] = find(parents[a]);
+	}
+	
+	static boolean union(int a, int b) {
+		int findA = find(a);
+		int findB = find(b);
+		
+		if (findA == findB)
+			return false;
+		
+		if (parents[findA] <= parents[findB]) {
+			parents[findA] += parents[findB];
+			parents[findB] = findA;
+		} else {
+			parents[findB] += parents[findA];
+			parents[findA] = findB;
+		}
+		
+		return true;
 	}
 }
