@@ -2,22 +2,6 @@ import java.util.*;
 import java.io.*;
 
 class Solution {
-	
-	static class Vertex implements Comparable<Vertex> {
-		int idx;
-		double dist;
-
-		public Vertex(int idx, double dist) {
-			super();
-			this.idx = idx;
-			this.dist = dist;
-		}
-
-		@Override
-		public int compareTo(Vertex o) {
-			return Double.compare(this.dist, o.dist);
-		}
-	}
 
 	public static void main(String[] args) throws Exception {
 		//System.setIn(new FileInputStream("res/input.txt"));
@@ -54,28 +38,34 @@ class Solution {
 			double[] minDist = new double[N];
 			Arrays.fill(minDist, Double.MAX_VALUE);
 			
-			Queue<Vertex> pq = new PriorityQueue<>();
 			minDist[0] = 0;
-			pq.offer(new Vertex(0, 0));
 			
 			double totalCost = 0.0;
 			
-			while (!pq.isEmpty()) {
-				Vertex cur = pq.poll();
+			for (int i = 0; i < N; i++) {
+				// find cur
+				double min = Double.MAX_VALUE;
+				int idx = -1;
 				
-				if (visited[cur.idx])
+				for (int j = 0; j < N; j++) {
+					if (!visited[j] && minDist[j] < min) {
+						min = minDist[j];
+						idx = j;
+					}
+				}
+				
+				if (visited[idx])
 					continue;
 				
-				totalCost += E * cur.dist;
-				visited[cur.idx] = true;
+				totalCost += E * minDist[idx];
+				visited[idx] = true;
 				
 				for (int next = 0; next < N; next++) {
-					if (next == cur.idx)
+					if (next == idx)
 						continue;
 					
-					if (!visited[next] && adjMatrix[cur.idx][next] < minDist[next]) {
-						minDist[next] = adjMatrix[cur.idx][next];
-						pq.offer(new Vertex(next, minDist[next]));
+					if (!visited[next] && adjMatrix[idx][next] < minDist[next]) {
+						minDist[next] = adjMatrix[idx][next];
 					}
 				}
 			}
