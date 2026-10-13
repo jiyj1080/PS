@@ -25,17 +25,16 @@ public class Solution {
 				values[i] = Integer.parseInt(st.nextToken());
 			}
 			
-			int[][] dp = new int[N + 1][K + 1];
+			int[] dp = new int[K + 1];
 			
 			for (int i = 1; i <= N; i++) {
-				for (int v = 0; v <= K; v++) {
-					dp[i][v] = dp[i-1][v];
+				for (int v = K; v >= 0; v--) {
 					if (v >= volumes[i])
-						dp[i][v] = Math.max(dp[i][v], dp[i-1][v-volumes[i]] + values[i]);
+						dp[v] = Math.max(dp[v], dp[v-volumes[i]] + values[i]);
 				}
 			}
 			
-			System.out.println("#" + tc + " " + dp[N][K]);
+			System.out.println("#" + tc + " " + dp[K]);
 		}
 	}
 }
