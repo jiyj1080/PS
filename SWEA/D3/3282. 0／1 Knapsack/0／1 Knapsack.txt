@@ -1,0 +1,41 @@
+import java.io.*;
+import java.util.*;
+
+/*
+
+ */
+
+public class Solution {
+
+	public static void main(String[] args) throws Exception {
+		//System.setIn(new FileInputStream("res/input.txt"));
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+
+		int T = Integer.parseInt(in.readLine());
+		for (int tc = 1; tc <= T; tc++) {
+			st = new StringTokenizer(in.readLine());
+			int N = Integer.parseInt(st.nextToken());
+			int K = Integer.parseInt(st.nextToken());
+			
+			int[] volumes = new int[N + 1], values = new int[N + 1];
+			for (int i = 1; i <= N; i++) {
+				st = new StringTokenizer(in.readLine());
+				volumes[i] = Integer.parseInt(st.nextToken());
+				values[i] = Integer.parseInt(st.nextToken());
+			}
+			
+			int[][] dp = new int[N + 1][K + 1];
+			
+			for (int i = 1; i <= N; i++) {
+				for (int v = 0; v <= K; v++) {
+					dp[i][v] = dp[i-1][v];
+					if (v >= volumes[i])
+						dp[i][v] = Math.max(dp[i][v], dp[i-1][v-volumes[i]] + values[i]);
+				}
+			}
+			
+			System.out.println("#" + tc + " " + dp[N][K]);
+		}
+	}
+}
