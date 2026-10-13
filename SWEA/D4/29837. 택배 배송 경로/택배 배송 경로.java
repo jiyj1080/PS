@@ -67,10 +67,10 @@ public class Solution {
 			while (!pq.isEmpty()) {
 				State cur = pq.poll();
 
-//				if (cur.id == E) {
-//					System.out.println("#" + tc + " " + cur.dist);
-//					continue A;
-//				}
+				if (cur.id == E) {
+					System.out.println("#" + tc + " " + cur.dist);
+					continue A;
+				}
 
 				if (cur.dist != minDist[cur.id])
 					continue;
