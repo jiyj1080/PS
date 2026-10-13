@@ -1,0 +1,56 @@
+import java.io.*;
+import java.util.*;
+
+/*
+
+ */
+
+public class Solution {
+
+	public static void main(String[] args) throws Exception {
+		//System.setIn(new FileInputStream("res/input.txt"));
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
+
+		int T = Integer.parseInt(in.readLine());
+		for (int tc = 1; tc <= T; tc++) {
+			int N = Integer.parseInt(in.readLine()); // ~ 100
+
+			int[][] map = new int[N][N];
+			for (int r = 0; r < N; r++) {
+				st = new StringTokenizer(in.readLine());
+				for (int c = 0; c <= r; c++) {
+					map[r][c] = Integer.parseInt(st.nextToken());
+				}
+			}
+
+			// f(r, c) = max(f(r - 1, c - 1), f(r - 1, c)) + map[r][c]
+
+			int[][] dp = new int[N][N];
+			dp[0][0] = map[0][0];
+
+			for (int r = 0; r < N; r++) {
+				for (int c = 0; c <= r; c++) {
+					if (c == 0) {
+						if (r == 0)
+							continue;
+						dp[r][c] = dp[r - 1][c] + map[r][c];
+						continue;
+					}
+					if (c == r) {
+						dp[r][c] = dp[r - 1][c - 1] + map[r][c];
+						continue;
+					}
+
+					dp[r][c] = Math.max(dp[r - 1][c - 1], dp[r - 1][c]) + map[r][c];
+				}
+			}
+			int max = 0;
+			for (int c = 0; c < N; c++) {
+				max = Math.max(max, dp[N - 1][c]);
+			}
+
+			System.out.println("#" + tc + " " + max	);
+		}
+	}
+}
