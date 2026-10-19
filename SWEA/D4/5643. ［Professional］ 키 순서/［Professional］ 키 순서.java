@@ -1,63 +1,49 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
-public class Solution {
-	static int n, m;
-	static boolean[][] edge = new boolean[501][501];
+class Solution {
+
+	static int N, M, adj[][];
 
 	public static void main(String[] args) throws Exception {
-		//System.setIn(new FileInputStream("input.txt"));
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
+		//System.setIn(new FileInputStream("res/input.txt"));
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 
-		int T = Integer.parseInt(br.readLine());
-
+		int T = Integer.parseInt(in.readLine());
 		for (int tc = 1; tc <= T; tc++) {
-			int result = 0;
-			n = Integer.parseInt(br.readLine());
-			for (int i = 1; i <= n; i++) {
-				Arrays.fill(edge[i], 1, n + 1, false);
-			}
-			m = Integer.parseInt(br.readLine());
-			for (int i = 0; i < m; i++) {
-				st = new StringTokenizer(br.readLine());
-				int from = Integer.parseInt(st.nextToken());
-				int to = Integer.parseInt(st.nextToken());
-				edge[from][to] = true;
-			}
+			int answer = 0;
 
-			for (int i = 1; i <= n; i++) {
-				edge[i][i] = true;
+			N = Integer.parseInt(in.readLine()); // ~ 500
+			M = Integer.parseInt(in.readLine()); // ~ 125,000
+
+			adj = new int[N][N];
+			for (int i = 0; i < M; i++) {
+				st = new StringTokenizer(in.readLine());
+				int from = Integer.parseInt(st.nextToken()) - 1;
+				int to = Integer.parseInt(st.nextToken()) - 1;
+				adj[from][to] = 1;
 			}
 
-			for (int k = 1; k <= n; k++) {
-				for (int i = 1; i <= n; i++) {
-					if (!edge[i][k])
-						continue;
-
-					for (int j = 1; j <= n; j++) {
-						if (edge[k][j]) {
-							edge[i][j] = true;
-						}
+			for (int k = 0; k < N; k++) {
+				for (int i = 0; i < N; i++) {
+					for (int j = 0; j < N; j++) {
+						if (adj[i][k] == 1 && adj[k][j] == 1)
+							adj[i][j] = 1;
 					}
 				}
 			}
 
-			for (int node = 1; node <= n; node++) {
-				boolean check = true;
-				for (int to = 1; to <= n; to++) {
-					check = check && (edge[node][to] || edge[to][node]);
+			for (int i = 0; i < N; i++) {
+				int cnt = 0;
+				for (int j = 0; j < N; j++) {
+					cnt += adj[i][j] + adj[j][i];
 				}
-				if (check)
-					result++;
+				if (cnt == N - 1)
+					answer++;
 			}
 
-			sb.append("#").append(tc).append(" ").append(result);
-			System.out.println(sb);
-			sb.setLength(0);
+			System.out.println("#" + tc + " " + answer);
 		}
 	}
-
 }
