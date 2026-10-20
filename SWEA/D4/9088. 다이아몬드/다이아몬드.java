@@ -26,8 +26,8 @@ public class Solution {
 			Arrays.sort(diamonds);
 			
 			int answer = 1;
+            int end = 0;
 			for (int i = 0; i < N; i++) {
-				int end = i;
 				while (end < N && diamonds[end] - diamonds[i] <= K)
 					end++;
 				
