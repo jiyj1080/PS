@@ -2,7 +2,11 @@ import java.io.*;
 import java.util.*;
 
 /*
-
+2 ~ 3시간?
+28,760 kb
+메모리
+106 ms
+실행시간
  */
 
 public class Solution {
@@ -59,6 +63,7 @@ public class Solution {
 			 * 메모리: 0 ~ 15, 초기값 0
 			 * 
 			 * ?: 4방향 분기해서 탐색해서 1개라도 정지 가능할 시 YES
+			 * -> dfs 말고 bfs 하기
 			 * 
 			 * 같은 자리에 같은 상태로 올 시 루프로 판단하고 종료?
 			 * 좌표별로 경험한 상태 메모리 관리 -> d, m 으로 관리하는 boolean map r, c, d, m
@@ -111,9 +116,6 @@ public class Solution {
 				for (int nd = 0; nd < 4; nd++) {
 					int nr = (cur.r + dr[nd] + R) % R;
 					int nc = (cur.c + dc[nd] + C) % C;
-
-					if (map[nr][nc] == '@')
-						return true;
 
 					if (memory[nr][nc][nd][cur.m])
 						continue;
